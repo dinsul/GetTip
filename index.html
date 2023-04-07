@@ -1,0 +1,18 @@
+{{define "words"}}
+<!doctype html>
+<html lang="ru" class="h-100">
+<head>
+    <title>Title</title>
+</head>
+<body>
+    <h2>Hello</h2>
+
+    <table>
+    <tr>
+        {{range .}}
+        <td>{{.word}}</td>
+        {{end}}
+    </tr>
+</body>
+</html>
+{{end}}
