@@ -9,12 +9,33 @@ import (
     "log" // пакет для логирования
 )
 
+type Team string
+
+const (
+    Black Team = "000000"
+    Red Team = "FF0000"
+    Blue Team = "0000FF"
+    Green Team = "00FF00"
+)
+
+type Card struct {
+    //Id int
+    Word string
+    Team Team
+    //IsClicked bool
+    //IsOpened bool
+}
+
+type game struct {
+    Title string
+    Cards [5][5]Card
+}
+
 func HomeRouterHandler(w http.ResponseWriter, r *http.Request) {
     r.ParseForm() //анализ аргументов,
     fmt.Println(r.Form)  // ввод информации о форме на стороне сервера
     fmt.Println("path", r.URL.Path)
     fmt.Println("scheme", r.URL.Scheme)
-    fmt.Println(r.Form["url_long"])
     var name string
     var question string
     var answer string
@@ -42,8 +63,12 @@ func HomeRouterHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func TestRange(rw http.ResponseWriter, r *http.Request) {
+    r.ParseForm()
+    for k, v := range r.Form {
+        fmt.Println(k, ": ", v)
+    }
+
     main_screen := filepath.Join("index.html");
-    words := [5]string {"hello", "world", "!", "!", "!"};
 
     tmpl, err := template.ParseFiles(main_screen);
     if err != nil {
@@ -51,7 +76,17 @@ func TestRange(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-    err = tmpl.ExecuteTemplate(rw, "words", words)
+    g := game {
+        Title : "Hello my game",
+    }
+
+    g.Cards[0] = [5]Card {{"Hello", Red}, {"world", Blue}, {"!", Blue}, {"!", Green}, {"!", Blue}}
+    g.Cards[1] = [5]Card {{"Привет", Red}, {"world", Blue}, {"!", Blue}, {"!", Green}, {"!", Blue}}
+    g.Cards[2] = [5]Card {{"Hello", Red}, {"мир", Blue}, {"!", Blue}, {"!", Green}, {"!", Blue}}
+    g.Cards[3] = [5]Card {{"Hello", Red}, {"world", Red}, {"!", Blue}, {"!", Green}, {"!", Blue}}
+    g.Cards[4] = [5]Card {{"Hello", Green}, {"world", Blue}, {"!", Blue}, {"!", Green}, {"!", Blue}}
+
+    err = tmpl.ExecuteTemplate(rw, "words", g)
     if err != nil {
         http.Error(rw, err.Error(), 400)
 		return

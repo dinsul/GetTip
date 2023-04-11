@@ -2,17 +2,23 @@
 <!doctype html>
 <html lang="ru" class="h-100">
 <head>
-    <title>Title</title>
+    <title>{{.Title}}</title>
 </head>
 <body>
-    <h2>Hello</h2>
+    <h2>{{.Title}}</h2>
 
     <table>
+    {{range .Cards}}
     <tr>
         {{range .}}
-        <td>{{.word}}</td>
+        <td style="background-color:#{{.Team}};text-align: center">
+            <form action="" method="post">
+                <button name="x, y" value="12, 8">{{.Word}}</button>
+            </form>
+        </td>
         {{end}}
     </tr>
+    {{end}}
 </body>
 </html>
 {{end}}
